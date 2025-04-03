@@ -1,0 +1,42 @@
+<%- include("header.ejs") %>
+<div class="container">
+    <h1>Draft Blogs:</h1>
+    <% if (blog_body && blog_body.length > 0) { %>
+        <div class="blog_posts">
+            <% blog_body.forEach((blog, index) => { %>
+                <div class="blogs">
+                    <p class="blog_content">
+                        <%= blog %>
+                        <div class="blog_buttons">
+                            <!-- Form for Posting Blogs -->
+                            <form method="post" action="/post-blog">
+                                <input type="hidden" name="index" value="<%= index %>">
+                                <input type="hidden" name="blogContent" value="<%= blog %>">
+                                <input class="submit_blog home_button" type="submit" value="Post">
+                            </form>
+
+                            <!-- Delete Draft Button -->
+                            <button class="buttons" onclick="deleteBlog('<%= index %>')">Delete</button>
+                        </div>
+                    </p>
+                </div>
+            <% }); %>
+        </div>
+    <% } else { %>
+        <h2 class="secondary_heading">No drafts...</h2>
+    <% } %>
+</div>
+
+<script>
+    function deleteBlog(index) {
+        fetch('/remove-blog', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ index: index })
+        }).then(response => {
+            if (response.ok) {
+                window.location.reload();
+            }
+        });
+    }
+</script>

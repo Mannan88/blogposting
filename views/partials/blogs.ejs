@@ -1,0 +1,67 @@
+<%- include("header.ejs") %>
+    <div class="container">
+        <h1>Blogs:</h1>
+        <% if (blog_body && blog_body.length> 0 ) { %>
+            <div class="blog_posts">
+                <% blog_body.forEach((blog, index)=> { %>
+                    <div class="blogs">
+                        <p class="blog_content">
+                            <%= blog %>
+                                <div class="blog_buttons">
+                                    <button class="buttons" onclick="editBlog(<%=index%>,'<%=blog%>')">Edit</button>
+                                    <button class="buttons" onclick="deleteBlog('<%= index %>')">Remove</button>
+                                </div>
+                        </p>
+                    </div>
+                    <% }); %>
+            </div>
+            <% } else { %>
+                <h2 class="secondary_heading">No blogs found...</h2>
+                <% } %>
+
+                    <div id="editor_window" style="display: none;">
+                        <form id="editForm">
+                            <input type="hidden" name="index" id="index">
+                            <textarea type="text" id="blog" name="blog"></textarea>
+                            <button class="buttons" type="submit">Save changes</button>
+                        </form>
+                    </div>
+    </div>
+    <script>
+        function editBlog(index, blog) {
+            document.getElementById('index').value = index
+            document.getElementById('blog').value = blog;
+            document.getElementById('editor_window').style.display = "block";
+        }
+
+
+        document.getElementById('editForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const index = document.getElementById('index').value;
+            const blog = document.getElementById('blog').value;
+            fetch('/edit-blog', {
+                method: 'PUT',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify({ index: index, blog: blog })
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    console.log("failed to update blog")
+                }
+            })
+        });
+
+
+        function deleteBlog(index) {
+            fetch('/remove-blog', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ index: index })
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                }
+            });
+        }
+    </script>

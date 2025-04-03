@@ -1,0 +1,22 @@
+<%- include("partials/header.ejs") %>
+<div class="main container">
+    <h1 class="heading">Welcome to a Blog Posting site!</h1>
+    <div class="create_blog">
+        <h2 class="secondary_heading">Create your first blog here!</h2>
+        <form method="post" id="blogForm" action="/blogs">
+            <input class="text_input" type="text" name="blogContent" placeholder="Start writing...">
+            <input class="submit_blog home_button" type="submit" value="Create" onclick="setAction('/blogs')">
+            <input class="submit_blog home_button" type="submit" value="Draft" onclick="setAction('/drafts')">
+        </form>
+        
+        <script>
+            function setAction(actionUrl) {
+                document.getElementById('blogForm').action = actionUrl;
+            }
+        </script>
+        
+
+    </div>
+<button id="check_blogs" class="home_button" onclick="window.location.href='/blogs'">Check blogs here</button>
+
+</div>
